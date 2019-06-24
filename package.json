@@ -2,7 +2,15 @@
   "name": "todo-vue",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "Andre Madarang <andre_madarang@hotmail.com>",
+  "author": {
+    "name": "Tiago Rodrigo Calogero",
+    "email": "tiaguinhor@gmail.com",
+    "role": "Senior Full Stack Developer and Software Engineer",
+    "homepages": [
+      "http://curriculo.ogaiti.com.br",
+      "http://budget.ogaiti.com.br"
+    ]
+  },
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
