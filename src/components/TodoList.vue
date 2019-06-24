@@ -7,9 +7,11 @@
           type="text"
           id="new-todo"
           placeholder="What needs to be done"
+          ref="newTodo"
           v-model="newTodo"
           @keyup.enter="addTodo"
         >
+        <label id="error-message" v-show="todoExistsMessage != ''">{{todoExistsMessage}}</label>
       </header>
 
       <div v-if="$store.state.loading" class="lds-ring">
@@ -72,7 +74,8 @@ export default {
   data() {
     return {
       newTodo: "",
-      idForTodo: 3
+      idForTodo: 3,
+      todoExistsMessage: ""
     };
   },
   created() {
@@ -93,12 +96,19 @@ export default {
         return;
       }
 
+      if (this.$store.getters.todoExists(this.newTodo)) {
+        this.todoExistsMessage = "Task already registered, try again.";
+        this.$refs.newTodo.select();
+        return;
+      }
+
       this.$store.dispatch("addTodo", {
         id: this.idForTodo,
         title: this.newTodo
       });
 
       this.newTodo = "";
+      this.todoExistsMessage = "";
       this.idForTodo++;
     }
   }
@@ -107,6 +117,13 @@ export default {
 
 <style lang="scss">
 @import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css");
+
+#error-message {
+  padding-left: 60px;
+  color: red;
+  position: absolute;
+  top: 60px;
+}
 
 // CSS Transitions
 .custom-fade-enter-active,
