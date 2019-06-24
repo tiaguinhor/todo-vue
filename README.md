@@ -12,7 +12,7 @@ Download the latest versions of [NodeJS](https://nodejs.org/), [GitHub](https://
 
 1 - Clone the repository `git clone https://github.com/tiaguinhor/todo-vue.git && cd todo-vue`
 
-2 - Run the command `npm install && composer install` to install dependencies of the project.
+2 - Run the command `npm install` to install dependencies of the project.
 
 3 - Run `npm start` and access http://localhost:8000/
 
