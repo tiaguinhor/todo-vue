@@ -1,4 +1,4 @@
-# TODO built with VueJS + Webpack
+# TODO built with VueJS + Webpack + Firebase
 
 > A TODO list built with Vue.js
 
