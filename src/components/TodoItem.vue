@@ -3,7 +3,10 @@
     <div class="view">
       <input class="toggle" type="checkbox" v-model="completed" @change="doneEdit">
 
-      <label v-if="!editing" @dblclick="editTodo">{{ title }}</label>
+      <label v-if="!editing" @dblclick="editTodo">
+        <small>{{timestamp}}</small>
+        {{ title }}
+      </label>
 
       <button class="destroy" @click="removeTodo(todo.id)"></button>
     </div>
@@ -22,6 +25,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "todo-item",
   props: {
@@ -61,8 +66,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["deleteTodo", "updateTodo"]),
     removeTodo(id) {
-      this.$store.dispatch("deleteTodo", id);
+      this.deleteTodo(id);
     },
     editTodo() {
       this.beforeEditCache = this.title;
@@ -74,7 +80,7 @@ export default {
       }
 
       this.editing = false;
-      this.$store.dispatch("updateTodo", {
+      this.updateTodo({
         id: this.id,
         title: this.title,
         completed: this.completed,

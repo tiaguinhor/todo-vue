@@ -9,12 +9,12 @@
           placeholder="What needs to be done"
           ref="newTodo"
           v-model="newTodo"
-          @keyup.enter="addTodo"
+          @keyup.enter="addNewTodo"
         >
         <label id="error-message" v-show="todoExistsMessage != ''">{{todoExistsMessage}}</label>
       </header>
 
-      <div v-if="$store.state.loading" class="lds-ring">
+      <div v-if="loading" class="lds-ring">
         <div></div>
         <div></div>
         <div></div>
@@ -23,6 +23,7 @@
 
       <section id="main" key="filtered-todos">
         <todo-check-all></todo-check-all>
+
         <ul id="todo-list">
           <transition-group
             name="fade-in-out"
@@ -61,6 +62,7 @@ import TodoItemsRemaining from "./TodoItemsRemaining";
 import TodoCheckAll from "./TodoCheckAll";
 import TodoFiltered from "./TodoFiltered";
 import TodoClearCompleted from "./TodoClearCompleted";
+import { mapGetters, mapActions, mapState } from "vuex";
 
 export default {
   name: "todo-list",
@@ -79,30 +81,27 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("initRealtimeListeners");
-    this.$store.dispatch("retrieveTodos");
+    this.initRealtimeListeners();
+    this.retrieveTodos();
   },
   computed: {
-    anyRemaining() {
-      return this.$store.getters.anyRemaining;
-    },
-    todosFiltered() {
-      return this.$store.getters.todosFiltered;
-    }
+    ...mapGetters(["anyRemaining", "todosFiltered", "todoExists"]),
+    ...mapState(["loading"])
   },
   methods: {
-    addTodo() {
+    ...mapActions(["addTodo", "retrieveTodos", "initRealtimeListeners"]),
+    addNewTodo() {
       if (this.newTodo.trim().length == 0) {
         return;
       }
 
-      if (this.$store.getters.todoExists(this.newTodo)) {
+      if (this.todoExists(this.newTodo)) {
         this.todoExistsMessage = "Task already registered, try again.";
         this.$refs.newTodo.select();
         return;
       }
 
-      this.$store.dispatch("addTodo", {
+      this.addTodo({
         id: this.idForTodo,
         title: this.newTodo
       });
@@ -123,6 +122,13 @@ export default {
   color: red;
   position: absolute;
   top: 60px;
+}
+
+#todo-list li label {
+  white-space: pre-line;
+  small {
+    font-size: 0.5em;
+  }
 }
 
 // CSS Transitions

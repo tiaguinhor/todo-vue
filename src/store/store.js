@@ -122,7 +122,9 @@ export const store = new Vuex.Store({
               id: doc.id,
               title: doc.data().title,
               completed: doc.data().completed,
-              timestamp: doc.data().timestamp
+              timestamp: moment(doc.data().timestamp.toDate()).format(
+                'DD/MM/YYYY HH:mm:ss'
+              )
             };
             tempTodos.push(data);
           });

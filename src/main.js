@@ -3,8 +3,10 @@
 import Vue from 'vue';
 import App from './App';
 import { store } from './store/store';
+import moment from 'moment';
 
 window.eventBus = new Vue();
+window.moment = moment;
 
 Vue.config.productionTip = false;
 
