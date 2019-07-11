@@ -44,7 +44,7 @@ export const store = new Vuex.Store({
         id: todo.id,
         title: todo.title,
         completed: false,
-        timestamp: new Date(),
+        timestamp: todo.timestamp || moment().format('DD/MM/YYYY HH:mm:ss'),
         editing: false
       });
     },
@@ -93,7 +93,10 @@ export const store = new Vuex.Store({
               context.commit('addTodo', {
                 id: change.doc.id,
                 title: change.doc.data().title,
-                completed: false
+                completed: false,
+                timestamp: moment(change.doc.data().timestamp.toDate()).format(
+                  'DD/MM/YYYY HH:mm:ss'
+                )
               });
             }
           }
@@ -117,6 +120,7 @@ export const store = new Vuex.Store({
         .get()
         .then(querySnapshot => {
           let tempTodos = [];
+
           querySnapshot.forEach(doc => {
             const data = {
               id: doc.id,
@@ -138,6 +142,7 @@ export const store = new Vuex.Store({
         });
     },
     addTodo(context, todo) {
+      context.commit('updateLoading', true);
       db
         .collection('todos')
         .add({
@@ -151,6 +156,7 @@ export const store = new Vuex.Store({
             title: todo.title,
             completed: false
           });
+          context.commit('updateLoading', false);
         });
     },
     updateTodo(context, todo) {
@@ -180,6 +186,7 @@ export const store = new Vuex.Store({
         });
     },
     checkAll(context, checked) {
+      context.commit('updateLoading', true);
       db
         .collection('todos')
         .get()
@@ -191,6 +198,7 @@ export const store = new Vuex.Store({
               })
               .then(() => {
                 context.commit('checkAll', checked);
+                context.commit('updateLoading', false);
               });
           });
         });
